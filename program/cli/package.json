@@ -1,0 +1,1 @@
+{"name":"xnt-swap-cli","private":true,"bin":{"xnt-swap":"./xnt-swap.cjs"},"description":"CLI for xnt_swap on X1 testnet (uses ../scripts deps)"}

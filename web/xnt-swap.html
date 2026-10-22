@@ -1,0 +1,128 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XNT Swap — Simulation & X1 Testnet</title><style>
+:root{--bg:#0a0a0a;--bg2:#141414;--bg3:#1a1a1a;--hov:#202020;--bd:#252525;--bdl:#2a2a2a;--tx:#e8e8e8;--tx2:#888;--dim:#555;--g:#3fb68b;--gbg:rgba(63,182,139,.1);--gh:#4bc89f;--r:#ff5353;--rbg:rgba(255,83,83,.1);--b:#5b9eff;--mono:'SF Mono',Monaco,Consolas,'Liberation Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;line-height:1.4;min-height:100vh}
+a{color:var(--g);text-decoration:none}a:hover{color:var(--gh)}
+.banner{background:rgba(255,149,0,.08);border-bottom:1px solid rgba(255,149,0,.25);color:#ff9500;text-align:center;font:500 11px var(--mono);letter-spacing:.5px;text-transform:uppercase;padding:5px}
+.top-bar{height:48px;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;padding:0 16px;gap:12px}
+.top-left,.top-right{display:flex;align-items:center;gap:16px}
+.brand{font-size:18px;font-weight:700;color:var(--g);letter-spacing:-.5px}.brand small{font-size:14px;font-weight:400;color:var(--tx2);letter-spacing:0}
+.tabs{display:flex;gap:2px;background:var(--bg);border:1px solid var(--bd);border-radius:4px;padding:2px}
+.tabs button{background:transparent;color:var(--tx2);padding:5px 12px;font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.5px;border-radius:3px}
+.tabs button:hover:not(:disabled){color:var(--tx);background:var(--hov)}.tabs .on{color:var(--g)!important;background:var(--gbg)!important}.tabs button:disabled{color:var(--dim);cursor:not-allowed}
+button{font:inherit;cursor:pointer;border:0;border-radius:4px;transition:all .15s}
+.btn{background:var(--g);color:#000;font-weight:600;font-size:12px;padding:8px 16px}.btn:hover:not(:disabled){background:var(--gh)}
+.btn2{background:transparent;color:var(--tx2);border:1px solid #333;font-size:11px;font-weight:500;padding:6px 12px}.btn2:hover:not(:disabled){color:var(--tx);border-color:var(--tx2)}.btn2:disabled{opacity:.5;cursor:wait}
+.btn-disc:hover{color:#f44336!important;border-color:#f44336!important}
+.wallet-info{display:flex;align-items:center;gap:6px;font-family:var(--mono)}.wallet-info .bal{font-size:14px;font-weight:600}.wallet-info .unit{font-size:11px;color:var(--tx2)}
+.addr-pill{padding:5px 10px;background:var(--bg3);border:1px solid var(--bd);border-radius:4px;font:12px var(--mono);color:var(--tx)}
+.subbar{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--bd);gap:12px;flex-wrap:wrap}
+.pair{font:600 14px var(--mono)}.px{font:600 15px var(--mono);color:var(--g)}.stat{font:11px var(--mono);color:var(--tx2)}.stat b{color:var(--tx);font-weight:600}
+main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:1px;background:var(--bd);min-height:calc(100vh - 140px)}
+main>.col{background:var(--bg);display:flex;flex-direction:column;gap:1px}
+.card{background:var(--bg2);padding:14px 16px}
+.ctitle,h4{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--tx2);margin:0 0 10px}
+.box{background:var(--bg);border:1px solid var(--bd);border-radius:4px;padding:10px 12px}.box:focus-within{border-color:var(--g)}
+.row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--tx2);gap:8px}
+.row b{font-family:var(--mono);font-weight:600}
+.row input{background:none;border:0;color:var(--tx);font:600 22px var(--mono);width:60%;outline:none;padding:4px 0}
+.tok{background:var(--bg3);border:1px solid var(--bdl);padding:4px 10px;border-radius:4px;font:600 12px var(--mono);color:var(--tx)}
+.mini{background:var(--bg3);border:1px solid var(--bdl);color:var(--tx2);padding:2px 7px;font:600 10px var(--mono);margin-left:4px}.mini:hover{color:var(--g);border-color:var(--g)}
+.flip{display:block;margin:-8px auto;position:relative;z-index:2;background:var(--bg2);border:1px solid var(--bd);color:var(--g);width:30px;height:30px;font-size:15px}.flip:hover{border-color:var(--g)}
+.details{font-size:12px;margin:12px 0;line-height:2;font-family:var(--mono)}.warn{color:#ff9500}
+.swap{width:100%;padding:13px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}.swap.sell{background:var(--r);color:#fff}.swap.sell:hover:not(:disabled){background:#ff6b6b}
+.swap:disabled{background:var(--bg3);color:var(--dim);cursor:not-allowed}.swap.loading{opacity:.7;cursor:wait}
+.sidetabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:12px}.sidetabs button{background:var(--bg3);color:var(--tx2);padding:9px;font:700 12px var(--mono);text-transform:uppercase;border:1px solid var(--bd)}
+.sidetabs .buy.on{background:var(--gbg);color:var(--g);border-color:var(--g)}.sidetabs .sell.on{background:var(--rbg);color:var(--r);border-color:var(--r)}
+table{width:100%;font:11px var(--mono);border-collapse:collapse}th{color:var(--dim);font-weight:500;text-transform:uppercase;font-size:10px}td,th{padding:6px 4px;text-align:left;border-bottom:1px solid var(--bd)}tr:hover td{background:var(--hov)}
+.big{font:700 26px var(--mono)}select{background:var(--bg3);color:var(--tx);border:1px solid var(--bd);border-radius:4px;padding:6px;font:12px var(--mono);max-width:180px}
+.tv{color:var(--tx)!important;font-size:18px!important}.note{font-size:11px;color:var(--tx2);margin-top:10px}.links{font:11px var(--mono);color:var(--dim);margin-top:10px;line-height:1.7}
+.spin{display:inline-block;width:10px;height:10px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .6s linear infinite;vertical-align:-1px;margin-right:6px}@keyframes sp{to{transform:rotate(360deg)}}
+#toast{display:none!important}
+#toastContainer{position:fixed;top:16px;right:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--bg2);border:1px solid var(--bd);border-radius:4px;padding:10px 14px;min-width:260px;max-width:400px;box-shadow:0 8px 24px rgba(0,0,0,.7);pointer-events:all;animation:si .3s ease-out;display:flex;gap:14px}
+.toast.hiding{animation:so .3s ease-in forwards}.toast.success{border-left:4px solid var(--g);background:linear-gradient(to right,rgba(0,200,150,.08),var(--bg2) 50%)}
+.toast.error{border-left:4px solid var(--r);background:linear-gradient(to right,rgba(255,83,83,.08),var(--bg2) 50%)}.toast.info{border-left:4px solid var(--b);background:linear-gradient(to right,rgba(91,158,255,.08),var(--bg2) 50%)}
+.toast-icon{font-size:20px;font-weight:700;line-height:1}.toast.success .toast-icon{color:var(--g)}.toast.error .toast-icon{color:var(--r)}.toast.info .toast-icon{color:var(--b)}
+.toast-title{font:700 12px var(--mono);letter-spacing:.5px;text-transform:uppercase}.toast-message{font:11px var(--mono);color:var(--tx2);word-break:break-word;margin-top:4px}
+@keyframes si{from{transform:translateX(400px);opacity:0}to{transform:none;opacity:1}}@keyframes so{to{transform:translateX(400px);opacity:0}}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:9000}.modal.hidden{display:none}
+.modal-content{background:var(--bg2);border:1px solid var(--bd);border-radius:4px;width:360px;max-width:92vw;box-shadow:0 8px 32px rgba(0,0,0,.8)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--bd);font:700 12px var(--mono);text-transform:uppercase;letter-spacing:.5px}
+.modal-close{background:none;color:var(--tx2);font-size:18px}.modal-close:hover{color:var(--tx)}.modal-body{padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.wopt{display:flex;justify-content:space-between;align-items:center;background:var(--bg);border:1px solid var(--bd);color:var(--tx);padding:12px;font:600 13px var(--mono);text-align:left}.wopt:hover{border-color:var(--g);background:var(--hov)}.wopt small{color:var(--tx2);font-weight:400;font-size:11px}.wopt small.ok{color:var(--g)}
+@media(max-width:900px){main{grid-template-columns:1fr}main>.col:last-child{order:-1}.top-bar{height:auto;flex-wrap:wrap;padding:8px 12px}.top-right{flex-wrap:wrap;gap:6px}.brand small{display:none}.row input{font-size:18px}#toastContainer{left:8px;right:8px;top:8px}.toast{min-width:0;max-width:none}.addr-pill{display:none}}
+
+/* Jupiter-style layout */
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 60px}
+.hero{display:flex;justify-content:center}
+.swapcard{width:480px;max-width:100%;background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:14px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.swapcard .box{border-radius:10px;padding:14px 14px 12px;background:var(--bg)}
+.swapcard .row input{font-size:30px}
+.swapcard .tok{font-size:13px;padding:7px 12px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+.tok .dot{width:18px;height:18px;border-radius:50%;display:inline-block;background:linear-gradient(135deg,#3fb68b,#1d6b52)}.tok .dot.u{background:linear-gradient(135deg,#5b9eff,#2c5bb0)}
+.presets{display:flex;gap:6px;margin-top:8px}.presets button{flex:1;background:var(--bg3);border:1px solid var(--bd);color:var(--tx2);font:600 11px var(--mono);padding:5px 0;border-radius:999px}.presets button:hover{color:var(--g);border-color:var(--g)}
+.swapcard .flip{width:38px;height:38px;border-radius:10px;font-size:18px;margin:-10px auto;border:3px solid var(--bg2);background:var(--bg3)}.swapcard .flip:hover{transform:rotate(180deg)}
+.after{font:11px var(--mono);color:var(--dim);margin-top:6px;min-height:14px}
+.swapcard .details{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;margin:10px 0}
+.swapcard .swap{border-radius:10px;padding:16px;font-size:15px}
+.cardhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:20px}.sections .full{grid-column:1/-1}
+.sec{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.stat2{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px 12px}.stat2 .l{font:600 10px var(--mono);color:var(--tx2);text-transform:uppercase;letter-spacing:.5px}.stat2 .v{font:700 20px var(--mono);color:var(--tx);margin-top:4px;word-break:break-all}
+.empty td{color:var(--dim);text-align:center;padding:18px}
+.copy{background:var(--bg3);border:1px solid var(--bd);color:var(--tx2);font:10px var(--mono);padding:2px 6px;margin-left:6px}.copy:hover{color:var(--g)}
+.skel{color:transparent!important;background:linear-gradient(90deg,var(--bg3),var(--hov),var(--bg3));background-size:200% 100%;animation:sk 1.2s infinite;border-radius:4px;min-width:80px;display:inline-block}@keyframes sk{to{background-position:-200% 0}}
+@media(max-width:900px){.sections{grid-template-columns:1fr}.wrap{padding:14px 10px 40px}.swapcard .row input{font-size:24px}}
+</style><style>#cHist td.amt{white-space:normal;word-break:break-word;font-variant-numeric:tabular-nums}</style></head><body>
+<div id="toastContainer"></div><div id="toast"></div>
+<div class="banner">⚠ Simulation — no real funds. Balances live only in this browser.</div>
+<header class="top-bar"><div class="top-left"><div class="brand">XNT <small>swap</small></div>
+ <div class="tabs"><button id="mSim" class="on">Simulation</button><button id="mChain">X1 Testnet</button></div></div>
+ <div class="top-right" id="simNav"><select id="wsel"></select><button class="btn2" id="newW">+ New sim wallet</button><button class="btn" id="conn">Connect wallet</button></div>
+ <div class="top-right" id="chainNav" style="display:none">
+  <button class="btn2" id="cFaucet">Faucet: 100k USDC.X</button>
+  <div id="walletNavDisconnected"><button class="btn" id="cConn">Connect Wallet</button></div>
+  <div id="walletNavConnected" style="display:none" class="wallet-info"><span class="addr-pill" id="navAddr"></span><span class="bal" id="navBal">0.00</span><span class="unit">XNT</span><button class="btn2 btn-disc" id="cDisc">Disconnect</button></div>
+ </div></header>
+<div id="walletModal" class="modal hidden"><div class="modal-content"><div class="modal-header"><span>Connect wallet</span><button class="modal-close" id="wmClose">×</button></div>
+ <div class="modal-body"><button class="wopt" data-w="x1">X1 Wallet <small id="wsX1">not detected</small></button><button class="wopt" data-w="phantom">Phantom <small id="wsPh">not detected</small></button>
+ <p class="note">Trades are signed in your wallet and sent to X1 testnet by this page, whatever network your wallet shows.</p></div></div></div>
+<div id="simView"><div class="subbar"><div class="top-left"><span class="pair">XNT / USDC</span><span class="px">$1.00</span><span class="stat">SELL <b>$0.90</b></span><span class="stat">MODE <b>SIM POOL</b></span></div><span class="stat"><span id="addr"></span></span></div>
+<div class="wrap"><div class="hero"><div class="swapcard">
+ <div class="cardhead"><div class="tabs"><button class="on">Swap</button><button disabled>Limit</button><button disabled>DCA</button></div><span class="stat">Simulation</span></div>
+ <div class="box"><div class="row"><span>You pay</span><span>Bal: <b id="balIn">0</b><button class="mini" id="half">HALF</button><button class="mini" id="max">MAX</button></span></div>
+  <div class="row"><input id="amt" inputmode="decimal" placeholder="0.00"><span class="tok"><span class="dot u" id="dIn"></span><span id="tokIn">USDC</span></span></div>
+  <div class="presets" data-for="amt"><button data-p="25">25%</button><button data-p="50">50%</button><button data-p="75">75%</button><button data-p="100">MAX</button></div></div>
+ <button class="flip" id="flip">⇅</button>
+ <div class="box"><div class="row"><span>You receive</span><span>Bal: <b id="balOut">0</b></span></div>
+  <div class="row"><input id="out" readonly placeholder="0.00"><span class="tok"><span class="dot" id="dOut"></span><span id="tokOut">XNT</span></span></div><div class="after" id="sAfter"></div></div>
+ <div class="details"><div class="row"><span>Rate</span><span id="rate"></span></div><div class="row"><span>Min received</span><span id="sMin">—</span></div><div class="row"><span>Price impact</span><span style="color:var(--g)">0.00%</span></div>
+  <div class="row"><span>Fee / haircut</span><span id="fee"></span></div><div class="row"><span>Route</span><span>XNT Sim Pool</span></div></div>
+ <button class="btn swap" id="go">Connect wallet</button></div></div>
+<div class="sections">
+ <div class="sec"><div class="ctitle">My balances</div><div class="stats"><div class="stat2"><div class="l">Total value</div><div class="v" id="total">$0.00</div></div><div class="stat2"><div class="l">USDC</div><div class="v" id="pUsdc">0</div></div><div class="stat2"><div class="l">XNT</div><div class="v" id="pXnt">0</div></div></div>
+  <p class="note">XNT marked at sell $0.90 / buy $1.00.</p><p style="margin-top:10px"><button class="btn2" id="reset">Reset wallet (re-airdrop 100,000 USDC)</button></p></div>
+ <div class="sec"><div class="ctitle">Pool</div><div class="stats"><div class="stat2"><div class="l">Buy price</div><div class="v">$1.00</div></div><div class="stat2"><div class="l">Sell price</div><div class="v">$0.90</div></div><div class="stat2"><div class="l">Liquidity</div><div class="v">∞ sim</div></div></div></div>
+ <div class="sec full"><div class="ctitle">Swap history</div><table><thead><tr><th>Time</th><th>Side</th><th>Paid</th><th>Got</th></tr></thead><tbody id="hist"></tbody></table></div>
+</div></div></div>
+<div id="chainView" style="display:none"><div class="subbar"><div class="top-left"><span class="pair">wXNT / USDC.X</span><span class="px" id="cPx">—</span><span class="stat">NET <b>X1 TESTNET</b></span></div><span class="stat">Wallet: <span id="cAddr">not connected</span></span></div>
+<div class="wrap"><div class="hero"><div class="swapcard">
+ <div class="cardhead"><div class="sidetabs" style="margin:0;flex:1;max-width:220px"><button class="buy on" id="cSideBuy">Buy</button><button class="sell" id="cSideSell">Sell</button></div><span class="stat">X1 testnet</span></div>
+ <div class="box"><div class="row"><span>You pay</span><span>Bal: <b id="cBalIn">0</b><button class="mini" id="cHalf">HALF</button><button class="mini" id="cMax">MAX</button></span></div>
+  <div class="row"><input id="cAmt" inputmode="decimal" placeholder="0.00"><span class="tok"><span class="dot u" id="cdIn"></span><span id="cIn">USDC.X</span></span></div>
+  <div class="presets" data-for="cAmt"><button data-p="25">25%</button><button data-p="50">50%</button><button data-p="75">75%</button><button data-p="100">MAX</button></div></div>
+ <button class="flip" id="cFlip">⇅</button>
+ <div class="box"><div class="row"><span>You receive</span><span>Bal: <b id="cBalOut">0</b></span></div>
+  <div class="row"><input id="cOut" readonly placeholder="0.00"><span class="tok"><span class="dot" id="cdOut"></span><span id="cOutT">wXNT</span></span></div><div class="after" id="cAfter"></div></div>
+ <div class="details"><div id="cRates" class="skel">Loading config…</div><div class="row"><span>Min received (0.5%)</span><span id="cMin">—</span></div><div class="row"><span>Price impact</span><span style="color:var(--g)">0.00% fixed rate</span></div><div class="row"><span>Network fee</span><span>~0.006 XNT</span></div><div class="row"><span>Route</span><span>xnt_swap program</span></div></div>
+ <button class="btn swap" id="cGo">Connect wallet</button></div></div>
+<div class="sections">
+ <div class="sec"><div class="cardhead"><span class="ctitle" style="margin:0">Treasury</span><span id="tLinks" class="stat"></span></div>
+  <div class="stats"><div class="stat2"><div class="l">wXNT vault</div><div class="v"><span id="tX" class="skel">…</span></div></div><div class="stat2"><div class="l">USDC.X vault</div><div class="v"><span id="tU" class="skel">…</span></div></div></div><p class="note" id="cVault"></p></div>
+ <div class="sec"><div class="ctitle">My balances</div><div class="stats"><div class="stat2"><div class="l">USDC.X</div><div class="v" id="cU">0</div></div><div class="stat2"><div class="l">wXNT</div><div class="v" id="cX">0</div></div><div class="stat2"><div class="l">XNT gas</div><div class="v" id="cG">0</div></div></div>
+  <p class="note">Test tokens on X1 testnet only, no value. The faucet also sends 0.05 test XNT for fees if you're low. Your wallet may warn that it can't simulate on testnet; that's expected.</p></div>
+ <div class="sec full"><div class="ctitle">Recent transactions</div><table><thead><tr><th>Time</th><th>Action</th><th>Amount</th><th>Tx</th></tr></thead><tbody id="cHist"></tbody></table><p class="links" id="cLinks"></p></div>
+</div></div></div>
+<script src="/xnt-swap-math.js"></script><script src="/xnt-swap.js"></script><script src="/solana-web3.iife.min.js"></script><script src="/xnt-swap-chain.js?v=1792700000"></script><script src="/xnt-swap-ux.js?v=1792700000"></script></body></html>

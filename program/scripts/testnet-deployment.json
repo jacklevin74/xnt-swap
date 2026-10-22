@@ -1,0 +1,12 @@
+{
+ "xntMint": "ExMyvGGUAc1NMMVHHHrV9b1WHmQyXktMC3rZ1puR9txM",
+ "usdcMint": "Hyair9L66XdPgsWxgBF5akDk7ssGhqLXFAYDpZxXbFCr",
+ "initSig": "4AfApngkzbgYVxKF618J9gn4XTb9xQXvp6hLfyK4fEVFnqumFzwDp5NBenBdq2Hsq4gRSRu2Nnr3xfEwkLzDgwyF",
+ "seedSig": "4BQr3fH8JApChbWA4fazjVQCRxZKA1ztLEjwaApGVRYNS4JjDx9KjZdXXnXBJHb5xC32Q3FxGfy9nPtU923M6gTe",
+ "faucetGasSig": "2sNMdgL33DKVAgQaBqfPL8bEoUHh7mdfd4yZ33MxE79Lnq4dSKN5KCe1aBXrue5NopKYhLeuDYAWGf21FcgR4NgZ",
+ "programId": "CbfMi1yGXAigkU8zpfYsLYGC1wQ1N66js1pKTRSZMmzB",
+ "config": "8jRNefKTWJWZMUkyXyQJcp78Q2WeaRWi3sKdnVa54Zga",
+ "faucetAuthority": "Gppa2ijKSQB3YcaS9WJX5aCHciFUwDi5ZWCQqU4m7bX6",
+ "xntVault": "2cXUhsbAzPUgmTE7EJCyUGzTs3VQp2Kyx697kVKTXqg3",
+ "usdcVault": "TvpZkiX23MR73XVqTBuUYbPVNra8jTBh4CfNctdqArh"
+}

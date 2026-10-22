@@ -1,0 +1,27 @@
+[package]
+name = "xnt_swap"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.79"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "xnt_swap"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+
+[dependencies]
+anchor-lang = { version = "0.31.1", features = ["init-if-needed"] }
+anchor-spl = { version = "0.31.1", default-features = false, features = ["token", "token_2022", "associated_token"] }
+
+[dev-dependencies]
+litesvm = "0.6.1"
+solana-sdk = "2.2"
+spl-token = { version = "7", features = ["no-entrypoint"] }
+spl-associated-token-account = { version = "6", features = ["no-entrypoint"] }

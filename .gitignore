@@ -1,0 +1,13 @@
+keys/
+**/keys/
+.env*
+.sim-admin-key
+.quicknode_*
+node_modules/
+target/
+.vercel/
+.anchor/
+test-ledger/
+*keypair*.json
+dev-only-*.json
+*.json.key
