@@ -1,0 +1,99 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Burn & Recycle — Simulator</title>
+<style>
+:root{--bg:#0b0f17;--card:#121826;--line:#1f2937;--tx:#e5e7eb;--mu:#8b95a7;--or:#f97316;--te:#14b8a6;--gr:#9ca3af;--red:#ef4444}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:16px}
+.banner{background:linear-gradient(90deg,#3b1d0a,#0b2b2a);border:1px solid #374151;border-radius:12px;padding:10px 14px;font-weight:600;text-align:center;margin-bottom:14px}
+h1{font-size:24px;margin:6px 0 2px}h2{font-size:16px;margin:0 0 10px}.mu{color:var(--mu)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.grid{display:grid;gap:14px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{background:#0f1520;border:1px solid var(--line);border-radius:12px;padding:12px}.stat b{display:block;font-size:20px;margin-top:2px}
+.stat.or{border-left:3px solid var(--or)}.stat.te{border-left:3px solid var(--te)}.stat.gr{border-left:3px solid var(--gr)}
+.f{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+label{display:block;font-size:12px;color:var(--mu)}input,select{width:100%;margin-top:3px;background:#0b111c;border:1px solid #263041;color:var(--tx);border-radius:8px;padding:7px 8px;font:inherit}
+input[type=checkbox]{width:auto;margin-right:6px}.chk{display:flex;align-items:center;color:var(--tx);font-size:13px;margin-top:18px}
+fieldset{border:1px solid var(--line);border-radius:12px;padding:12px;margin:0 0 12px}legend{padding:0 6px;font-weight:600}
+.or-t{color:var(--or)}.te-t{color:var(--te)}.gr-t{color:var(--gr)}
+button{background:var(--or);color:#111;border:0;border-radius:10px;padding:10px 18px;font-weight:700;cursor:pointer}button.s{background:#1f2937;color:var(--tx)}
+canvas{width:100%;height:220px;display:block}
+.tbl{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child{text-align:left}th{color:var(--mu);font-weight:500;position:sticky;top:0;background:var(--card)}
+img.d{width:100%;border-radius:12px;border:1px solid var(--line)}
+.warn{color:var(--red);font-size:12px;font-weight:600}.lg span{display:inline-block;margin-right:12px;font-size:12px}.lg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px}
+details summary{cursor:pointer;font-weight:600}
+@media(max-width:820px){.g2,.g3{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.stat b{font-size:17px}h1{font-size:20px}}
+</style></head><body><div class="wrap">
+<div class="banner">⚠️ Simulation only — no wallet, no transactions, no on-chain actions. All numbers are modeled.</div>
+<h1>Burn &amp; Recycle simulator</h1><div class="mu">Half of Foundation USDC inflow funds a neutral buy-and-burn reverse auction (<span class="or-t">orange</span>); half funds venue-neutral LP rewards (<span class="te-t">teal</span>); unspent rewards fall back to the desk reserve (<span class="gr-t">gray</span>).</div>
+<div class="card" style="margin-top:14px"><details><summary>How it works (diagram)</summary><img class="d" style="margin-top:10px" src="burn-recycle-diagram.png" alt="Burn and recycle flow diagram"></details></div>
+
+<div class="card"><h2>Inputs</h2>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><span class="mu" style="align-self:center">Scenario:</span><button class="s sc" data-s="base">Base</button><button class="s sc" data-s="bear">−40% drift</button><button class="s sc" data-s="rally">Rally</button></div>
+<fieldset><legend>Global</legend><div class="f">
+<label>Weekly XNT sells to desk ($)<input id="sells" type="number" value="30000"></label>
+<label>Desk fee routed (%)<input id="feePct" type="number" value="10"></label>
+<label>→ Inflow / epoch<input id="inflowOut" disabled></label>
+<label>Burn share (%)<input id="split" type="number" value="50"></label>
+<label>Epochs<input id="epochs" type="number" value="26"></label>
+<label>Epoch length (days)<input id="eDays" type="number" value="7"></label>
+<label>Start XNT price ($)<input id="p0" type="number" value="0.2354" step="0.0001"></label>
+<label>Circulating XNT<input id="supply" type="number" value="500000000"></label>
+<label>Volatility / epoch (%)<input id="vol" type="number" value="8"></label>
+<label>Total drift over run (%)<input id="drift" type="number" value="0"></label>
+<label>Desk net flow to xDEX / epoch ($, −=sell)<input id="desk" type="number" value="0"></label>
+<label>Holder sell-back (% of rally vs no-buy closed / epoch)<input id="sellBack" type="number" value="25"></label>
+<label>Seed<input id="seed" type="number" value="42"></label>
+</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><span class="mu" style="font-size:12px;align-self:center">Sell-volume presets:</span><button class="s pv" data-v="10000">$10k/wk</button><button class="s pv" data-v="30000">$30k/wk</button><button class="s pv" data-v="100000">$100k/wk</button></div>
+<div class="mu" style="font-size:12px;margin-top:6px">Price is endogenous: each epoch a random exogenous dollar flow (same in every world) trades against the pools, plus burn/desk buys. Burned XNT leaves the pool permanently, so worlds diverge.</div></fieldset>
+<fieldset><legend>Venues (constant product, 0.3% fee)</legend><div class="f">
+<label>xDEX XNT reserve<input id="x1" type="number" value="19372.95"></label>
+<label>xDEX pool age (days)<input id="age1" type="number" value="300"></label>
+<label class="chk"><input id="use2" type="checkbox">Second DEX pool</label>
+<label>DEX-2 XNT reserve<input id="x2" type="number" value="4000"></label>
+<label>DEX-2 pool age (days)<input id="age2" type="number" value="45"></label>
+<label>Thin farm pool XNT reserve<input id="x3" type="number" value="500"></label>
+</div><div class="mu" style="font-size:12px;margin-top:6px">Defaults = REAL mainnet xDEX XNT/USDC.X pool CAJeVEoS…xRvR, fetched Oct 22, 2026 3:59 PM HST: <b>19,372.95 XNT / 4,560.90 USDC.X</b> (vault balances minus protocol &amp; fund fees) → price <b>$0.2354</b>, TVL ≈ $9.1k. <a href="#" id="deep" style="color:var(--te)">Use deep hypothetical pool (5M XNT)</a></div></fieldset>
+<fieldset><legend class="or-t">Burn half — reverse auction</legend><div class="f">
+<label>Start bid below min(spot,TWAP) (%)<input id="disc" type="number" value="3" step="0.1"></label>
+<label>Step up (%)<input id="step" type="number" value="0.25" step="0.05"></label>
+<label>Cap above reference (%)<input id="cap" type="number" value="3" step="0.1"></label>
+<label>Cap reference<select id="capRef"><option value="max">max(spot, TWAP)</option><option value="twap">TWAP only</option></select></label>
+<label>Start reference<select id="startRef"><option value="min">min(spot, TWAP)</option><option value="twap">TWAP only (legacy)</option></select></label>
+<label>TWAP window<select id="tw"><option value="0">Intra-epoch (≈spot)</option><option value="1" selected>1 epoch</option><option value="3">3 epochs</option><option value="6">6 epochs</option></select></label>
+<label>Off-pool sellers ($ XNT offered per 1% over spot)<input id="offDepth" type="number" value="300"></label>
+<label>Arb min margin (%)<input id="am" type="number" value="0.2" step="0.05"></label>
+<label class="chk"><input id="rand" type="checkbox" checked>Randomized start time</label>
+<label class="chk"><input id="fr" type="checkbox" checked>Baseline: front-running</label>
+<label>Front-runner size (% of buy)<input id="frs" type="number" value="50"></label>
+</div></fieldset>
+<fieldset><legend class="te-t">Recycled half — LP rewards</legend><div class="f">
+<label>Min lockup (days)<input id="minLock" type="number" value="14"></label>
+<label class="chk"><input id="rTvl" type="checkbox" checked>Rule: min pool TVL</label>
+<label>Min TVL ($)<input id="minTvl" type="number" value="5000"></label>
+<label class="chk"><input id="rAge" type="checkbox" checked>Rule: min pool age</label>
+<label>Min age (days)<input id="minAge" type="number" value="30"></label>
+<label>Max reward APR, all LPs (%)<input id="maxApr" type="number" value="100"></label>
+<label class="chk"><input id="rCapOn" type="checkbox">Optional per-LP reward cap</label>
+<label>Per-LP reward cap / epoch ($)<input id="rCap" type="number" value="500"></label>
+<label>Starting desk reserve ($)<input id="res0" type="number" value="100000"></label>
+</div>
+<fieldset style="margin-top:10px;border-color:#7f1d1d"><legend class="warn">Loss-protection variant — not recommended</legend><div class="f">
+<label class="chk"><input id="lp" type="checkbox">Enable loss protection</label>
+<label>LP-protection cap / LP / epoch ($)<input id="lpCap" type="number" value="2000"></label>
+<label>LP-protection cap / epoch total ($)<input id="lpCapE" type="number" value="10000"></label>
+</div><div class="mu" style="font-size:12px;margin-top:6px">These caps apply only to loss-protection payouts, not to rewards.</div></fieldset></fieldset>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button id="run">Run simulation</button><button class="s" id="rerun">Re-run (new seed)</button><button class="s" id="scen">Scenario runs (compare)</button></div>
+</div>
+<div class="card" id="scCard" style="display:none"><h2>Scenario runs</h2><div class="tbl" id="scTbl"></div><div class="mu" style="font-size:12px;margin-top:6px">Each scenario changes one thing from your current inputs (same seed). Price diff = final auction-world price vs market-buy baseline.</div></div>
+<div class="card"><h2>Results</h2><div class="cards" id="cards"></div></div>
+<div class="grid g3">
+<div class="card"><h2>Price path</h2><canvas id="c1"></canvas><div class="lg"><span><i style="background:#e5e7eb"></i>Auction world</span><span><i style="background:#ef4444"></i>Market-buy baseline</span><span><i style="background:#6b7280"></i>No buying</span></div></div>
+<div class="card"><h2>Cumulative XNT burned</h2><canvas id="c2"></canvas><div class="lg"><span><i style="background:var(--or)"></i>Auction</span><span><i style="background:#ef4444"></i>Baseline</span></div></div>
+<div class="card"><h2>Reward APR (USDC side)</h2><canvas id="c3"></canvas><div class="lg"><span><i style="background:var(--te)"></i>xDEX</span><span><i style="background:#60a5fa"></i>DEX-2</span></div></div>
+</div>
+<div class="card"><h2>LPs (final)</h2><div class="tbl" id="lps"></div></div>
+<div class="card"><h2>Per-epoch</h2><div class="tbl" id="tbl"></div></div>
+<div class="mu" style="font-size:12px;text-align:center;margin:10px 0 30px">Model: pool-driven price with random exogenous dollar flow; burn buys move price permanently; arbs fill the auction by buying from the cheapest pool until marginal cost + margin = bid. Simplified; not a forecast.</div>
+</div>
+<script src="burn-recycle.js?v=4"></script></body></html>
